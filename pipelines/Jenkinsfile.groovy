@@ -60,7 +60,7 @@ pipeline {
                     ]
                 ])
                 // This is a workaround for a bug in Jenkins - JENKINS-47801
-                // Cannot stash an empty dir therefore we are creating a empty dummy file inside the log dir 
+                // Cannot stash an empty dir therefore we create an empty dummy file inside the log dir
                 dir(logDir){
                 writeFile file: 'dummy.txt', text: ""
                 }
@@ -96,7 +96,7 @@ pipeline {
                     ]
                 ])
                 // This is a workaround for a bug in Jenkins - JENKINS-47801
-                // Cannot stash an empty dir therefore we are creating a empty dummy file inside the log dir 
+                // Cannot stash an empty dir therefore we create an empty dummy file inside the log dir
                 dir(logDir){
                 writeFile file: 'dummy.txt', text: ""
                 }
@@ -111,13 +111,13 @@ pipeline {
             }
         }
 
-    //     stage('Build Docker Image') {
-    //         steps {
-    //             script {
-    //                 dockerImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_NUMBER}", 'app/.')
-    //             }
-    //         }
-    //     }
+        stage('Build Docker Image') {
+            steps {
+                sh """#!/bin/bash --login
+                    python CloudBash-CICD/stages/build_docker.py ${WORKSPACE}/CloudBash/api/Dockerfile cloudbash cloudbash eu-north-1
+                """
+            }
+        }
 
     //     stage('Lint') {
     //         steps {
