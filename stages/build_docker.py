@@ -6,7 +6,7 @@ import json
 def get_latest_image_tag(repository_name, aws_region):
     try:
         command = [
-            'aws', 'ecr', 'describe-images',
+            '/usr/local/bin/aws', 'ecr', 'describe-images',
             '--repository-name', repository_name,
             '--region', aws_region,
             '--output', 'text',
