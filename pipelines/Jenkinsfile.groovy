@@ -47,7 +47,7 @@ pipeline {
                     poll: false,
                     scm: [
                         $class: 'GitSCM',
-                        branches: [[name: '*/app_deployment_pipeline']],
+                        branches: [[name: '*/build_docker_stage']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash-CICD']
