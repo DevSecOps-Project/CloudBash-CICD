@@ -26,17 +26,16 @@ pipeline {
 
     agent any
 
-    environment {
-        DOCKER_IMAGE = "your-docker-image"
-        AWS_REGION = "your-aws-region"
-        CLUSTER_NAME = "your-cluster-name"
-        NAMESPACE = "your-namespace"
-        DEPLOYMENT_NAME = "your-deployment-name"
-        APP_REPO_URL = 'https://github.com/your-app-repo.git'
-        APP_BRANCH = 'main'
-        SLACK_CHANNEL = "#your-slack-channel"
-        SLACK_CREDENTIAL_ID = "your-slack-credential-id"
-    }
+    // environment {
+    //     DOCKER_IMAGE = "your-docker-image"
+    //     AWS_REGION = "your-aws-region"
+    //     CLUSTER_NAME = "your-cluster-name"
+    //     NAMESPACE = "your-namespace"
+    //     DEPLOYMENT_NAME = "your-deployment-name"
+    //     APP_REPO_URL = 'https://github.com/your-app-repo.git'
+    //     SLACK_CHANNEL = "#your-slack-channel"
+    //     SLACK_CREDENTIAL_ID = "your-slack-credential-id"
+    // }
 
     stages {
 
@@ -84,7 +83,7 @@ pipeline {
                     poll: false,
                     scm: [
                         $class: 'GitSCM',
-                        branches: [[name: '*/${APP_BRANCH}']],
+                        branches: [[name: "*/${params.BRANCH}"]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash']
