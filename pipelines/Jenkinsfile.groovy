@@ -1,6 +1,6 @@
 #!groovy
 
-// import groovy.json.Json.JsonSlurperClassic
+import groovy.json.JsonSlurperClassic
 
 // SCM data is no longer provided in environment variables when
 // calling "checkout scm", it is now the return value of the call
