@@ -9,8 +9,8 @@ def get_latest_image_tag(repository_name, aws_region):
             'aws', 'ecr', 'describe-images',
             '--repository-name', repository_name,
             '--region', aws_region,
-            '--query', 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]',
-            '--output', 'json'
+            '--output', 'text',
+            '--query', '"sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]"'
         ]
         result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         latest_tag = json.loads(result.stdout.strip().strip('"'))
