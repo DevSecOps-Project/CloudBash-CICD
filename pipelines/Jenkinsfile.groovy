@@ -9,14 +9,6 @@ def logDir = "logs"
 
 // This is a workaround for a bug in Jenkins - JENKINS-40574
 // On the first run of the pipeline default parameters will not be set
-def getLabel() {
-  def label = params.MACHINE
-  if (label == null || label == 'default') {
-    label = any
-  }
-  println "PIPELINE: getLabel: MACHINE parameter is ${params.MACHINE}, Setting the label to ${label}"
-  return label
-}
 
 pipeline {
 
@@ -32,9 +24,7 @@ pipeline {
         skipDefaultCheckout true
     }
 
-    agent {
-        label getLabel()
-    }
+    agent any
 
     environment {
         DOCKER_IMAGE = "your-docker-image"
