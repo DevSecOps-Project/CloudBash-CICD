@@ -17,7 +17,7 @@ pipeline {
     }
 
     options {
-        timeout(time: 90, unit: 'MINUTES')
+        timeout(time: 45, unit: 'MINUTES')
         timestamps()
         disableConcurrentBuilds()
         buildDiscarder(logRotator(daysToKeepStr: '14', numToKeepStr: '10'))
@@ -48,7 +48,7 @@ pipeline {
                     poll: false,
                     scm: [
                         $class: 'GitSCM',
-                        branches: [[name: '*/develop']],
+                        branches: [[name: '*/app_deployment_pipeline']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash-CICD']
@@ -87,7 +87,7 @@ pipeline {
                         branches: [[name: '*/${APP_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
-                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash-CICD']
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash']
                         ],
                         submoduleCfg: [],
                         userRemoteConfigs: [[
