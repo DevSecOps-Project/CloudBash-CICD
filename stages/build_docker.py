@@ -2,6 +2,8 @@ import os
 import subprocess
 import sys
 
+# TODO: create a run_procces method
+
 def get_latest_image_version(repository_name, aws_region):
     try:
         command = [
@@ -14,6 +16,8 @@ def get_latest_image_version(repository_name, aws_region):
         cmd = ' '.join(command)
         result = os.popen(cmd).read()
         striped_tag = result.strip(" v'\n'")
+        if striped_tag == '':
+            raise ValueError(f"command: {cmd} failed or returned an empty value")
         latest_tag = float(striped_tag)
         print(f'Latest image version: {latest_tag}')
         return latest_tag
@@ -28,16 +32,15 @@ def increment_tag(ver):
 
 def build_docker_image(dockerfile_path, image_name, new_tag):
     try:
-        # docker build --tag <image-name> <location>
         command = [
-            'docker', 'build',
+            '/usr/local/bin/docker', 'build',
             '--tag', f'{image_name}:{new_tag}',
-            dockerfile_path,
+            dockerfile_path
         ]
         print(f'Running command: {" ".join(command)}')
         cmd = ' '.join(command)
         os.popen(cmd).read()
-        print('Docker image built successfully.')
+        # TODO: check if worked
     except subprocess.CalledProcessError as e:
         print(f'Error occurred while building Docker image: {e.stderr}', file=sys.stderr)
         sys.exit(1)
