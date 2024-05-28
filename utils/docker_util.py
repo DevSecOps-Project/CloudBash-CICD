@@ -4,8 +4,9 @@ import utils.constants
 import utils.executor
 
 
-def build_docker_image(dockerfile_path, image_name, new_tag):
+def build_docker_image(dockerfile_path, new_tag):
     try:
+        image_name = utils.constants.DOCKER.LOCAL_IMAGE_NAME
         utils.executor.execute_command([
             '/usr/local/bin/docker', 'build',
             '--tag', f'{image_name}:{new_tag}',

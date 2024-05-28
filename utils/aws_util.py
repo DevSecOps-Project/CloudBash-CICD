@@ -4,8 +4,10 @@ import utils.constants
 import utils.executor
 
 
-def get_latest_image_version(repository_name, aws_region):
+def get_latest_image_version():
     try:
+        repository_name = utils.constants.AWS.ECR_REPO
+        aws_region = utils.constants.AWS.AWS_REGION
         result = utils.executor.execute_command([
             '/opt/homebrew/bin/aws', 'ecr', 'describe-images',
             '--repository-name', repository_name,
