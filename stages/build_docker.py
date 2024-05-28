@@ -5,7 +5,7 @@ import sys
 def get_latest_image_version(repository_name, aws_region):
     try:
         command = [
-            'aws', 'ecr', 'describe-images',
+            '/opt/homebrew/bin/aws', 'ecr', 'describe-images',
             '--repository-name', repository_name,
             '--region', aws_region,
             '--output', 'text',
