@@ -2,7 +2,7 @@ import sys
 
 import utils.aws_util
 import utils.docker_util
-import utils.exe_util
+import utils.executor
 
 
 def increment_tag(ver):

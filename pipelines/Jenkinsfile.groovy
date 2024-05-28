@@ -143,16 +143,21 @@ pipeline {
     //         }
     //     }
 
-    //     stage('Push Docker Image') {
-    //         steps {
-    //             script {
-    //                 docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-    //                     dockerImage.push("${env.BUILD_NUMBER}")
-    //                     dockerImage.push("latest")
-    //                 }
-    //             }
-    //         }
-    //     }
+        stage('Upload Image') {
+            steps {
+                sh """#!/bin/bash --login
+                    python3 CloudBash-CICD/upload_image.py
+                """
+            }
+            post {
+                success {
+                    echo "${STAGE_NAME} Stage Finished Successfully"
+                }
+                failure {
+                    echo "${STAGE_NAME} Stage Failed"
+                }
+            }
+        }
 
     //     stage('Deploy to EKS') {
     //         steps {
