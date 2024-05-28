@@ -6,7 +6,7 @@ import utils.executor
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 2:
         print('Usage: python build_docker_image.py <Dockerfile path> <repository name> <image name> <aws region>')
         sys.exit(1)
     dockerfile_path = sys.argv[1]
