@@ -117,6 +117,14 @@ pipeline {
                     python3 CloudBash-CICD/stages/build_docker.py ${WORKSPACE}/CloudBash/api/Dockerfile cloudbash cloudbash eu-north-1
                 """
             }
+            post {
+                success {
+                    echo "${STAGE_NAME} Stage Finished Successfully"
+                }
+                failure {
+                    echo "${STAGE_NAME} Stage Failed"
+                }
+            }
         }
 
     //     stage('Lint') {

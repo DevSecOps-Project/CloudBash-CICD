@@ -4,43 +4,40 @@ import sys
 import re
 import json
 
-def get_latest_image_tag(repository_name, aws_region):
+def get_latest_image_version(repository_name, aws_region):
     try:
         command = [
-            '/usr/local/aws', 'ecr', 'describe-images',
+            'aws', 'ecr', 'describe-images',
             '--repository-name', repository_name,
             '--region', aws_region,
             '--output', 'text',
             '--query', '"sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]"'
         ]
         cmd = ' '.join(command)
-        result = os.system(cmd)
-        latest_tag = json.loads(result.stdout.strip().strip('"'))
-        print(f'Latest image tag: {latest_tag}')
+        result = os.popen(cmd).read()
+        latest_tag = float(result.strip(" v"))
+        print(f'Latest image version: {latest_tag}')
         return latest_tag
     except subprocess.CalledProcessError as e:
         print(f'Error occurred while retrieving latest image tag from ECR: {e.stderr}', file=sys.stderr)
         sys.exit(1)
 
-def increment_tag(tag):
-    match = re.match(r"(\d+)$", tag)
-    if match:
-        new_tag = str(int(tag) + 1)
-    else:
-        raise ValueError(f"Invalid tag format: {tag}")
+def increment_tag(ver):
+    new_ver = (ver * 10 + 1) / 10
+    new_tag = 'v' + str(new_ver)
     return new_tag
 
 def build_docker_image(dockerfile_path, image_name, new_tag):
     try:
+        # docker build --tag <image-name> <location>
         command = [
             'docker', 'build',
-            '-t', f'{image_name}:{new_tag}',
-            '-f', dockerfile_path,
-            '.'
+            '--tag', f'{image_name}:{new_tag}',
+            dockerfile_path,
         ]
         print(f'Running command: {" ".join(command)}')
-        result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        print(result.stdout)
+        cmd = ' '.join(command)
+        os.popen(cmd).read()
         print('Docker image built successfully.')
     except subprocess.CalledProcessError as e:
         print(f'Error occurred while building Docker image: {e.stderr}', file=sys.stderr)
@@ -54,6 +51,6 @@ if __name__ == '__main__':
     repository_name = sys.argv[2]
     image_name = sys.argv[3]
     aws_region = sys.argv[4]
-    latest_tag = get_latest_image_tag(repository_name, aws_region)
-    new_tag = increment_tag(latest_tag)
+    latest_ver = get_latest_image_version(repository_name, aws_region)
+    new_tag = increment_tag(latest_ver)
     build_docker_image(dockerfile_path, image_name, new_tag)
