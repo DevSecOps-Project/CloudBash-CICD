@@ -47,7 +47,7 @@ pipeline {
                     poll: false,
                     scm: [
                         $class: 'GitSCM',
-                        branches: [[name: '*/build_docker_stage']],
+                        branches: [[name: '*/upload_img_to_aws_stage']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash-CICD']
