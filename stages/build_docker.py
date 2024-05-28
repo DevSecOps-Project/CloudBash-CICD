@@ -1,8 +1,6 @@
 import os
 import subprocess
 import sys
-import re
-import json
 
 def get_latest_image_version(repository_name, aws_region):
     try:
@@ -15,7 +13,8 @@ def get_latest_image_version(repository_name, aws_region):
         ]
         cmd = ' '.join(command)
         result = os.popen(cmd).read()
-        latest_tag = float(result.strip(" v"))
+        striped_tag = result.strip(" v'\n'")
+        latest_tag = float(striped_tag)
         print(f'Latest image version: {latest_tag}')
         return latest_tag
     except subprocess.CalledProcessError as e:
