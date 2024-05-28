@@ -47,7 +47,7 @@ pipeline {
                     poll: false,
                     scm: [
                         $class: 'GitSCM',
-                        branches: [[name: '*/app_deployment_pipeline']],
+                        branches: [[name: '*/build_docker_stage']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash-CICD']
@@ -60,7 +60,7 @@ pipeline {
                     ]
                 ])
                 // This is a workaround for a bug in Jenkins - JENKINS-47801
-                // Cannot stash an empty dir therefore we are creating a empty dummy file inside the log dir 
+                // Cannot stash an empty dir therefore we create an empty dummy file inside the log dir
                 dir(logDir){
                 writeFile file: 'dummy.txt', text: ""
                 }
@@ -96,7 +96,7 @@ pipeline {
                     ]
                 ])
                 // This is a workaround for a bug in Jenkins - JENKINS-47801
-                // Cannot stash an empty dir therefore we are creating a empty dummy file inside the log dir 
+                // Cannot stash an empty dir therefore we create an empty dummy file inside the log dir
                 dir(logDir){
                 writeFile file: 'dummy.txt', text: ""
                 }
@@ -111,13 +111,21 @@ pipeline {
             }
         }
 
-    //     stage('Build Docker Image') {
-    //         steps {
-    //             script {
-    //                 dockerImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_NUMBER}", 'app/.')
-    //             }
-    //         }
-    //     }
+        stage('Build Docker Image') {
+            steps {
+                sh """#!/bin/bash --login
+                    python3 CloudBash-CICD/build_docker.py ${WORKSPACE}/CloudBash/api cloudbash cloudbash eu-north-1
+                """
+            }
+            post {
+                success {
+                    echo "${STAGE_NAME} Stage Finished Successfully"
+                }
+                failure {
+                    echo "${STAGE_NAME} Stage Failed"
+                }
+            }
+        }
 
     //     stage('Lint') {
     //         steps {
