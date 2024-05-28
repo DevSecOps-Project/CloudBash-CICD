@@ -7,10 +7,7 @@ import utils.docker_util
 
 if __name__ == "__main__":
     try:
-        docker_tag = utils.aws_util.get_latest_image_version(
-            utils.constants.AWS.ECR_REPO,
-            utils.constants.AWS.AWS_REGION
-        )
+        docker_tag = utils.aws_util.get_latest_image_version()
         new_docker_tag = utils.docker_util.increment_tag(docker_tag)
         tagged_image = utils.docker_util.tag_docker_image(new_docker_tag)
         utils.aws_util.ecr_authenticate()
