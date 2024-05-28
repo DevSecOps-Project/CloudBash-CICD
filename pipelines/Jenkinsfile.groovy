@@ -114,7 +114,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh """#!/bin/bash --login
-                    python3.11 CloudBash-CICD/stages/build_docker.py ${WORKSPACE}/CloudBash/api/Dockerfile cloudbash cloudbash eu-north-1
+                    python3 CloudBash-CICD/stages/build_docker.py ${WORKSPACE}/CloudBash/api/Dockerfile cloudbash cloudbash eu-north-1
                 """
             }
             post {
