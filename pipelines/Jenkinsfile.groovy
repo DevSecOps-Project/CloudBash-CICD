@@ -105,7 +105,7 @@ pipeline {
                         python3 -m venv ${VENV_DIR}
                         source ${VENV_DIR}/bin/activate
                         pip install --upgrade pip
-                        pip install flask requests pytest
+                        pip install flask flask_restful requests pytest
                     """
                 }
             }
@@ -122,12 +122,14 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 script {
-                    sh """#!/bin/bash --login
-                        nohup python3 ${WORKSPACE}/CloudBash/api/main.py > flask_app.log 2>&1 &
+                    sh """#!/bin/bash
+                        source ${VENV_DIR}/bin/activate
+                        nohup python3 ${FLASK_APP} > flask_app.log 2>&1 &
                     """
                     sleep 10
-                    sh """#!/bin/bash --login
-                        export PYTHONPATH="${WORKSPACE}/CloudBash"
+                    sh """#!/bin/bash
+                        source ${VENV_DIR}/bin/activate
+                        export PYTHONPATH=${PYTHONPATH}
                         pytest ${WORKSPACE}/CloudBash/tests/test_api.py
                     """
                 }
@@ -135,9 +137,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh """#!/bin/bash --login
-                            pkill -f "python3 ${WORKSPACE}/CloudBash/api/main.py"
-                        """
+                        sh 'pkill -f "python3 ${FLASK_APP}"'
                     }
                 }
                 success {
