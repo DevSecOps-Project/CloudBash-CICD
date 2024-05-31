@@ -26,17 +26,6 @@ pipeline {
 
     agent any
 
-    // environment {
-    //     DOCKER_IMAGE = "your-docker-image"
-    //     AWS_REGION = "your-aws-region"
-    //     CLUSTER_NAME = "your-cluster-name"
-    //     NAMESPACE = "your-namespace"
-    //     DEPLOYMENT_NAME = "your-deployment-name"
-    //     APP_REPO_URL = 'https://github.com/your-app-repo.git'
-    //     SLACK_CHANNEL = "#your-slack-channel"
-    //     SLACK_CREDENTIAL_ID = "your-slack-credential-id"
-    // }
-
     stages {
 
         stage('Checkout CICD') {
@@ -135,13 +124,31 @@ pipeline {
     //         }
     //     }
 
-    //     stage('Unit Tests') {
-    //         steps {
-    //             dir('app') {
-    //                 sh 'npm test'
-    //             }
-    //         }
-    //     }
+        stage('Unit Tests') {
+            steps {
+                sh """#!/bin/bash --login
+                    sh nohup python3 ${WORKSPACE}/CloudBash/api/main.py
+                """
+                sleep 10
+                sh """#!/bin/bash --login
+                    sh export PYTHONPATH="${WORKSPACE}/CloudBash"
+                    sh pytest ${WORKSPACE}/CloudBash/tests/test_api.py
+                """
+            }
+            post {
+                always {
+                    sh """#!/bin/bash --login
+                        sh pkill -f "python3 ${WORKSPACE}/CloudBash/api/main.py"
+                    """
+                }
+                success {
+                    echo "${STAGE_NAME} Stage Finished Successfully"
+                }
+                failure {
+                    echo "${STAGE_NAME} Stage Failed"
+                }
+            }
+        }
 
         stage('Upload Image') {
             steps {
