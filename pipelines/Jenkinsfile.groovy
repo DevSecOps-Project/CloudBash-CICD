@@ -126,14 +126,16 @@ pipeline {
 
         stage('Unit Tests') {
             steps {
-                sh """#!/bin/bash --login
-                    sh nohup python3 ${WORKSPACE}/CloudBash/api/main.py
-                """
-                sleep 10
-                sh """#!/bin/bash --login
-                    sh export PYTHONPATH="${WORKSPACE}/CloudBash"
-                    sh pytest ${WORKSPACE}/CloudBash/tests/test_api.py
-                """
+                script {
+                    sh """#!/bin/bash --login
+                        nohup python3 ${WORKSPACE}/CloudBash/api/main.py > flask_app.log 2>&1 &
+                    """
+                    sleep 10
+                    sh """#!/bin/bash --login
+                        export PYTHONPATH="${WORKSPACE}/CloudBash"
+                        pytest ${WORKSPACE}/CloudBash/tests/test_api.py
+                    """
+                }
             }
             post {
                 always {
