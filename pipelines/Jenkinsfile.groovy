@@ -90,10 +90,23 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+    //     stage('Lint') {
+    //         steps {
+    //             dir('app') {
+    //                 sh 'npm run lint'
+    //             }
+    //         }
+    //     }
+
+        stage('Setup Environment') {
             steps {
                 script {
-                    sh 'python3 CloudBash-CICD/build_docker.py ${WORKSPACE}/CloudBash/api'
+                    sh """#!/bin/bash
+                        python3 -m venv ${VENV_DIR}
+                        source ${VENV_DIR}/bin/activate
+                        pip install --upgrade pip
+                        pip install flask requests pytest
+                    """
                 }
             }
             post {
@@ -105,14 +118,6 @@ pipeline {
                 }
             }
         }
-
-    //     stage('Lint') {
-    //         steps {
-    //             dir('app') {
-    //                 sh 'npm run lint'
-    //             }
-    //         }
-    //     }
 
         stage('Unit Tests') {
             steps {
@@ -135,6 +140,22 @@ pipeline {
                         """
                     }
                 }
+                success {
+                    echo "${STAGE_NAME} Stage Finished Successfully"
+                }
+                failure {
+                    echo "${STAGE_NAME} Stage Failed"
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'python3 CloudBash-CICD/build_docker.py ${WORKSPACE}/CloudBash/api'
+                }
+            }
+            post {
                 success {
                     echo "${STAGE_NAME} Stage Finished Successfully"
                 }
