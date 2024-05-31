@@ -29,7 +29,7 @@ pipeline {
     environment {
         VENV_DIR = "${WORKSPACE}/venv"
         FLASK_APP = "${WORKSPACE}/CloudBash/api/main.py"
-        PYTHONPATH = "${WORKSPACE}/CloudBash/api"
+        PYTHONPATH = "${WORKSPACE}/CloudBash:${WORKSPACE}/CloudBash/api"
     }
 
     stages {
