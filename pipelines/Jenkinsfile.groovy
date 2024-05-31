@@ -139,9 +139,11 @@ pipeline {
             }
             post {
                 always {
-                    sh """#!/bin/bash --login
-                        sh pkill -f "python3 ${WORKSPACE}/CloudBash/api/main.py"
-                    """
+                    script {
+                        sh """#!/bin/bash --login
+                            pkill -f "python3 ${WORKSPACE}/CloudBash/api/main.py"
+                        """
+                    }
                 }
                 success {
                     echo "${STAGE_NAME} Stage Finished Successfully"
