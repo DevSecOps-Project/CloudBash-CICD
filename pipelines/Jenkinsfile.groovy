@@ -29,7 +29,7 @@ pipeline {
     environment {
         VENV_DIR = "${WORKSPACE}/venv"
         FLASK_APP = "${WORKSPACE}/CloudBash/api/main.py"
-        PYTHONPATH = "${WORKSPACE}/CloudBash"
+        PYTHONPATH = "${WORKSPACE}/CloudBash/api"
     }
 
     stages {
@@ -106,6 +106,7 @@ pipeline {
                         source ${VENV_DIR}/bin/activate
                         pip install --upgrade pip
                         pip install flask flask_restful requests pytest
+                        python -c "import sys; print(sys.path)"
                     """
                 }
             }
