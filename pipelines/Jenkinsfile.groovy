@@ -138,7 +138,10 @@ pipeline {
             post {
                 always {
                     script {
-                        sh 'pkill -f "python3 ${FLASK_APP}"'
+                        sh 'pkill -f "python3 ${FLASK_APP}" || true'
+                        sh """#!/bin/bash
+                            deactivate || true
+                        """
                     }
                 }
                 success {
