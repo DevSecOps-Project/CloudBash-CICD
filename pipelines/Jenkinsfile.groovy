@@ -39,7 +39,7 @@ pipeline {
                 echo "${STAGE_NAME} Stage Execution Starting"
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: '*/unit_test_for_app']],
+                    branches: [[name: '*/develop']],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash-CICD']],
                     submoduleCfg: [],
