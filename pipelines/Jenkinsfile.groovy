@@ -26,16 +26,11 @@ pipeline {
 
     agent any
 
-    // environment {
-    //     DOCKER_IMAGE = "your-docker-image"
-    //     AWS_REGION = "your-aws-region"
-    //     CLUSTER_NAME = "your-cluster-name"
-    //     NAMESPACE = "your-namespace"
-    //     DEPLOYMENT_NAME = "your-deployment-name"
-    //     APP_REPO_URL = 'https://github.com/your-app-repo.git'
-    //     SLACK_CHANNEL = "#your-slack-channel"
-    //     SLACK_CREDENTIAL_ID = "your-slack-credential-id"
-    // }
+    environment {
+        VENV_DIR = "${WORKSPACE}/venv"
+        FLASK_APP = "${WORKSPACE}/CloudBash/api/main.py"
+        PYTHONPATH = "${WORKSPACE}/CloudBash:${WORKSPACE}/CloudBash/api"
+    }
 
     stages {
 
@@ -43,26 +38,18 @@ pipeline {
             steps {
                 echo "${STAGE_NAME} Stage Execution Starting"
                 checkout([
-                    changelog: false,
-                    poll: false,
-                    scm: [
-                        $class: 'GitSCM',
-                        branches: [[name: '*/upload_img_to_aws_stage']],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [
-                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash-CICD']
-                        ],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[
-                            credentialsId: 'da701aad-9139-4a8c-b2b9-32f5872d9de3',
-                            url: 'https://github.com/DevSecOps-Project/CloudBash-CICD.git'
-                        ]]
-                    ]
+                    $class: 'GitSCM',
+                    branches: [[name: '*/develop']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash-CICD']],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[
+                        credentialsId: 'da701aad-9139-4a8c-b2b9-32f5872d9de3',
+                        url: 'https://github.com/DevSecOps-Project/CloudBash-CICD.git'
+                    ]]
                 ])
-                // This is a workaround for a bug in Jenkins - JENKINS-47801
-                // Cannot stash an empty dir therefore we create an empty dummy file inside the log dir
-                dir(logDir){
-                writeFile file: 'dummy.txt', text: ""
+                dir('logs') {
+                    writeFile file: 'dummy.txt', text: ""
                 }
             }
             post {
@@ -79,43 +66,19 @@ pipeline {
             steps {
                 echo "${STAGE_NAME} Stage Execution Starting"
                 checkout([
-                    changelog: false,
-                    poll: false,
-                    scm: [
-                        $class: 'GitSCM',
-                        branches: [[name: "*/${params.BRANCH}"]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [
-                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash']
-                        ],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[
-                            credentialsId: 'da701aad-9139-4a8c-b2b9-32f5872d9de3',
-                            url: 'https://github.com/DevSecOps-Project/CloudBash.git'
-                        ]]
-                    ]
+                    $class: 'GitSCM',
+                    branches: [[name: "*/${params.BRANCH}"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'CloudBash']],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[
+                        credentialsId: 'da701aad-9139-4a8c-b2b9-32f5872d9de3',
+                        url: 'https://github.com/DevSecOps-Project/CloudBash.git'
+                    ]]
                 ])
-                // This is a workaround for a bug in Jenkins - JENKINS-47801
-                // Cannot stash an empty dir therefore we create an empty dummy file inside the log dir
-                dir(logDir){
-                writeFile file: 'dummy.txt', text: ""
+                dir('logs') {
+                    writeFile file: 'dummy.txt', text: ""
                 }
-            }
-            post {
-                success {
-                    echo "${STAGE_NAME} Stage Finished Successfully"
-                }
-                failure {
-                    echo "${STAGE_NAME} Stage Failed"
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh """#!/bin/bash --login
-                    python3 CloudBash-CICD/build_docker.py ${WORKSPACE}/CloudBash/api
-                """
             }
             post {
                 success {
@@ -135,19 +98,82 @@ pipeline {
     //         }
     //     }
 
-    //     stage('Unit Tests') {
-    //         steps {
-    //             dir('app') {
-    //                 sh 'npm test'
-    //             }
-    //         }
-    //     }
+        stage('Setup Environment') {
+            steps {
+                script {
+                    sh """#!/bin/bash
+                        python3 -m venv ${VENV_DIR}
+                        source ${VENV_DIR}/bin/activate
+                        pip install --upgrade pip
+                        pip install flask flask_restful requests pytest
+                        python -c "import sys; print(sys.path)"
+                    """
+                }
+            }
+            post {
+                success {
+                    echo "${STAGE_NAME} Stage Finished Successfully"
+                }
+                failure {
+                    echo "${STAGE_NAME} Stage Failed"
+                }
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                script {
+                    sh """#!/bin/bash
+                        source ${VENV_DIR}/bin/activate
+                        nohup python3 ${FLASK_APP} > flask_app.log 2>&1 &
+                    """
+                    sleep 10
+                    sh """#!/bin/bash
+                        source ${VENV_DIR}/bin/activate
+                        export PYTHONPATH=${PYTHONPATH}
+                        pytest ${WORKSPACE}/CloudBash/tests/test_api.py
+                    """
+                }
+            }
+            post {
+                always {
+                    script {
+                        sh 'pkill -f "python3 ${FLASK_APP}" || true'
+                        sh """#!/bin/bash
+                            deactivate || true
+                        """
+                    }
+                }
+                success {
+                    echo "${STAGE_NAME} Stage Finished Successfully"
+                }
+                failure {
+                    echo "${STAGE_NAME} Stage Failed"
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'python3 CloudBash-CICD/build_docker.py ${WORKSPACE}/CloudBash/api'
+                }
+            }
+            post {
+                success {
+                    echo "${STAGE_NAME} Stage Finished Successfully"
+                }
+                failure {
+                    echo "${STAGE_NAME} Stage Failed"
+                }
+            }
+        }
 
         stage('Upload Image') {
             steps {
-                sh """#!/bin/bash --login
-                    python3 CloudBash-CICD/upload_image.py
-                """
+                script {
+                    sh 'python3 CloudBash-CICD/upload_image.py'
+                }
             }
             post {
                 success {
