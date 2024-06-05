@@ -5,3 +5,9 @@ class AWS:
 
 class DOCKER:
     LOCAL_IMAGE_NAME = "cloudbash"
+
+class EMAIL:
+    SMTP_SERVER = 'smtp.gmail.com'
+    SMTP_PORT = 587
+    MAIN_RECEIVER = 'raismandavid@gmail.com'
+    SENDER_EMAIL = 'devsecopsproj@gmail.com'
