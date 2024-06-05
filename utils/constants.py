@@ -11,3 +11,6 @@ class EMAIL:
     SMTP_PORT = 587
     MAIN_RECEIVER = 'raismandavid@gmail.com'
     SENDER_EMAIL = 'devsecopsproj@gmail.com'
+
+class JENKINS:
+    PORT = '8888'
