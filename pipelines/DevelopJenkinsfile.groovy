@@ -102,11 +102,6 @@ pipeline {
                 script {
                     sh """#!/bin/bash
                         source ${VENV_DIR}/bin/activate
-                        nohup python3 ${FLASK_APP} > flask_app.log 2>&1 &
-                    """
-                    sleep 10
-                    sh """#!/bin/bash
-                        source ${VENV_DIR}/bin/activate
                         export PYTHONPATH=${PYTHONPATH}
                         pytest ${WORKSPACE}/CloudBash-CICD/tests
                     """
@@ -115,7 +110,6 @@ pipeline {
             post {
                 always {
                     script {
-                        sh 'pkill -f "python3 ${FLASK_APP}" || true'
                         sh """#!/bin/bash
                             deactivate || true
                         """
