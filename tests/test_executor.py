@@ -23,14 +23,10 @@ class TestExecutorUtil:
 
     def test_execute_command_failure(self):
         self.command = ["false"]
-        mock_result = Mock()
-        mock_result.returncode = 1
-        mock_result.stdout = ""
-        mock_result.stderr = "some error occurred"
         with patch('subprocess.run',
                    side_effect=subprocess.CalledProcessError(
                        returncode=1,
-                       cmd=self.command,
+                       cmd=' '.join(self.command),
                        output="",
                        stderr="some error occurred"
                     )
@@ -40,9 +36,7 @@ class TestExecutorUtil:
                 'stdout': "",
                 'stderr': "some error occurred",
                 'returncode': 1,
-                'error': 'Command \'{}\' returned with exit status 1.'.format(
-                    ' '.join(self.command)
-                )
+                'error': "Command 'false' returned non-zero exit status 1."
             }
 
     def test_execute_command_unexpected_exception(self):
