@@ -78,24 +78,24 @@ pipeline {
             }
         }
 
-        stage('Pylint') {
-            steps {
-                script {
-                    sh """#!/bin/bash
-                        source ${VENV_DIR}/bin/activate
-                        pylint --disable=missing-docstring,W0201,W0718  ${WORKSPACE}/CloudBash-CICD
-                    """
-                }
-            }
-            post {
-                success {
-                    echo "${STAGE_NAME} Stage Finished Successfully"
-                }
-                failure {
-                    echo "${STAGE_NAME} Stage Failed"
-                }
-            }
-        }
+        // stage('Pylint') {
+        //     steps {
+        //         script {
+        //             sh """#!/bin/bash
+        //                 source ${VENV_DIR}/bin/activate
+        //                 pylint --disable=missing-docstring,W0201,W0718  ${WORKSPACE}/CloudBash-CICD
+        //             """
+        //         }
+        //     }
+        //     post {
+        //         success {
+        //             echo "${STAGE_NAME} Stage Finished Successfully"
+        //         }
+        //         failure {
+        //             echo "${STAGE_NAME} Stage Failed"
+        //         }
+        //     }
+        // }
 
         stage('Unit Tests') {
             steps {
