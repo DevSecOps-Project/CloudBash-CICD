@@ -1,6 +1,4 @@
 import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 import utils.constants
 import utils.email_util
@@ -24,6 +22,6 @@ if __name__ == '__main__':
             message.as_string()
         )
         server.quit()
-        print(f'Email sent successfully')
+        print('Email sent successfully')
     except Exception as e:
         print(f'Failed to send email. Error: {str(e)}')

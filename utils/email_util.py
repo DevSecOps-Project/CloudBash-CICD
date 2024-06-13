@@ -1,6 +1,5 @@
 import email.mime.multipart
 import email.mime.text
-import os
 
 import utils.constants
 import utils.jenkins_util
