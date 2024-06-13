@@ -17,7 +17,7 @@ def get_latest_image_version():
         ])
         striped_tag = result.strip(" v'\n'")
         if striped_tag == '':
-            raise ValueError(f"failed to get the latest image version")
+            raise ValueError("failed to get the latest image version")
         latest_tag = float(striped_tag)
         return latest_tag
     except Exception as e:
