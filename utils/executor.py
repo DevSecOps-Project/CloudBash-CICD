@@ -6,9 +6,7 @@ def execute_command(command):
         cmd = ' '.join(command)
         print(f'Running command: {cmd}')
         result = subprocess.run(cmd, shell=True, check=True, text=True, capture_output=True)
-        print(result)
         if result.returncode == 0:
-            print("inside if")
             return result.stdout
         raise ValueError(
             f"command: {cmd} returned: {result.returncode} but expected 0"
