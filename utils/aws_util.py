@@ -5,7 +5,9 @@ import utils.executor
 
 
 def strip_version_val(version):
-    return version.strip(" v'\n'\"")
+    if type(version) == type('str'):
+        return version.strip(" v'\n'\"")
+    return ''
 
 def get_latest_image_version():
     try:
@@ -36,7 +38,7 @@ def ecr_authenticate():
         aws_region = utils.constants.AWS.AWS_REGION
         pass_stdin = f"{aws_account_id}.dkr.ecr.{aws_region}.amazonaws.com"
         utils.executor.execute_command([
-            "aws", "ecr",
+            "/opt/homebrew/bin/aws", "ecr",
             "get-login-password",
             "--region", aws_region,
             "|", "docker", "login",
