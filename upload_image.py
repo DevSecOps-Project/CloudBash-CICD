@@ -10,6 +10,8 @@ if __name__ == "__main__":
     try:
         tagged_image = os.getenv('TAGGED_IMAGE')
         new_docker_tag = os.getenv('NEW_DOCKER_TAG')
+        print(f'NEW_DOCKER_TAG={new_docker_tag}')
+        print(f'TAGGED_IMAGE={tagged_image}')
         if not tagged_image or not new_docker_tag:
             raise ValueError('TAGGED_IMAGE or NEW_DOCKER_TAG environment variables not set')
         utils.aws_util.ecr_authenticate()

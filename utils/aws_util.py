@@ -41,7 +41,7 @@ def ecr_authenticate():
             "/opt/homebrew/bin/aws", "ecr",
             "get-login-password",
             "--region", aws_region,
-            "|", "docker", "login",
+            "|", "/usr/local/bin/docker", "login",
             "--username", "AWS",
             "--password-stdin", pass_stdin
         ])
