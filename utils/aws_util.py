@@ -51,6 +51,6 @@ def ecr_authenticate():
 
 def is_last_version(version):
     last_up_ver = get_latest_image_version()
-    if version == strip_version_val(last_up_ver):
+    if version == str(last_up_ver):
         return True
     return False
