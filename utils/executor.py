@@ -12,16 +12,16 @@ def execute_command(command):
             f"command: {cmd} returned: {result.returncode} but expected 0"
         )
     except subprocess.CalledProcessError as e:
-        return {
+        print({
             'stdout': e.output,
             'stderr': e.stderr,
             'returncode': e.returncode,
             'error': f"Command '{e.cmd}' returned non-zero exit status {e.returncode}."
-        }
+        })
     except Exception as e:
-        return {
+        print({
             'stdout': None,
             'stderr': None,
             'returncode': None,
             'error': str(e)
-        }
+        })

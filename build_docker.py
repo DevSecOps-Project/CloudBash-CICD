@@ -12,5 +12,8 @@ if __name__ == '__main__':
     dockerfile_path = sys.argv[1]
     latest_ver = utils.aws_util.get_latest_image_version()
     print(f'Latest image version: v{latest_ver}')
-    new_tag = utils.docker_util.increment_tag(latest_ver)
-    utils.docker_util.build_docker_image(dockerfile_path, new_tag)
+    new_docker_tag = utils.docker_util.increment_tag(latest_ver)
+    utils.docker_util.build_docker_image(dockerfile_path, new_docker_tag)
+    tagged_image = utils.docker_util.tag_docker_image(new_docker_tag)
+    print(f'NEW_DOCKER_TAG={new_docker_tag}')
+    print(f'TAGGED_IMAGE={tagged_image}')

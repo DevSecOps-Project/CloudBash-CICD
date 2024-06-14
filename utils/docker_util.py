@@ -29,14 +29,12 @@ def tag_docker_image(docker_tag):
         image_name = utils.constants.DOCKER.LOCAL_IMAGE_NAME
         ecr_uri = f"{aws_account_id}.dkr.ecr.{aws_region}.amazonaws.com/{repository_name}"
         tagged_image = f"{ecr_uri}:{docker_tag}"
-        utils.executor.execute_command(
-            [
-                "docker",
+        utils.executor.execute_command([
+                "/usr/local/bin/docker",
                 "tag",
                 f"{image_name}:{docker_tag}",
                 tagged_image
-            ]
-        )
+        ])
         return tagged_image
     except Exception as e:
         print(f'Error occurred while tagging Docker image: {e}')
@@ -44,7 +42,7 @@ def tag_docker_image(docker_tag):
 
 def push_docker_image_to_ecr(tagged_image):
     try:
-        utils.executor.execute_command(["docker", "push", tagged_image])
+        utils.executor.execute_command(["/usr/local/bin/docker", "push", tagged_image])
     except Exception as e:
         print(f'Error occurred while pushing Docker image to ECR: {e}')
         sys.exit(1)
