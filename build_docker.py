@@ -14,6 +14,10 @@ if __name__ == '__main__':
     print(f'Latest image version: v{latest_ver}')
     new_docker_tag = utils.docker_util.increment_tag(latest_ver)
     utils.docker_util.build_docker_image(dockerfile_path, new_docker_tag)
+    utils.executor.execute_command([
+        'docker',
+        'pull', 'cloudbash:v1.8'
+    ])
     tagged_image = utils.docker_util.tag_docker_image(new_docker_tag)
     print(f'NEW_DOCKER_TAG={new_docker_tag}')
     print(f'TAGGED_IMAGE={tagged_image}')
