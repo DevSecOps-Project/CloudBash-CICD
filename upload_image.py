@@ -21,7 +21,7 @@ if __name__ == "__main__":
             print("Docker image uploaded successfully to ECR")
         else:
             print("Docker image upload to ECR failed")
-            raise ValueError(f'image {new_docker_tag} was not found on aws')
+            raise ValueError(f'image v{new_tag} was not found on aws')
     except Exception as e:
         print(f"Error occurred while uploading Docker image to ECR: {e}")
         sys.exit(1)
