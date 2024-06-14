@@ -4,6 +4,9 @@ import utils.constants
 import utils.executor
 
 
+def strip_version_val(version):
+    return version.strip(" v'\n'\"")
+
 def get_latest_image_version():
     try:
         repository_name = utils.constants.AWS.ECR_REPO
@@ -12,10 +15,10 @@ def get_latest_image_version():
             '/opt/homebrew/bin/aws', 'ecr', 'describe-images',
             '--repository-name', repository_name,
             '--region', aws_region,
-            '--output', 'text',
-            '--query', '"sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]"'
+            '--output', 'json',
+            '--query', '"sort_by(imageDetails, &imagePushedAt)[-1].imageTags[0]"'
         ])
-        striped_tag = result.strip(" v'\n'")
+        striped_tag = strip_version_val(result)
         if striped_tag == '':
             raise ValueError("failed to get the latest image version")
         latest_tag = float(striped_tag)
@@ -40,3 +43,9 @@ def ecr_authenticate():
     except Exception as e:
         print(f'Error occurred while authenticating ECR: {e}')
         sys.exit(1)
+
+def is_last_version(version):
+    last_up_ver = get_latest_image_version()
+    if version == strip_version_val(last_up_ver):
+        return True
+    return False
