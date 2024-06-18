@@ -5,13 +5,13 @@ import utils.executor
 
 
 def strip_version_val(version):
-    if type(version) == type('str'):
+    if isinstance(version) == isinstance('str'):
         return version.strip(" v'\n'\"")
     return ''
 
 def get_latest_image_version():
     try:
-        while(1):
+        while 1:
             repository_name = utils.constants.AWS.ECR_REPO
             aws_region = utils.constants.AWS.AWS_REGION
             result = utils.executor.execute_command([
@@ -21,7 +21,7 @@ def get_latest_image_version():
                 '--output', 'json',
                 '--query', '"sort_by(imageDetails, &imagePushedAt)[-1].imageTags[0]"'
             ])
-            if result != None:
+            if result is not None:
                 break
         striped_tag = strip_version_val(result)
         if striped_tag == '':

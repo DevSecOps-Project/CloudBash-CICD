@@ -18,6 +18,7 @@ def execute_command(command):
             'returncode': e.returncode,
             'error': f"Command '{e.cmd}' returned non-zero exit status {e.returncode}."
         })
+        return 1
     except Exception as e:
         print({
             'stdout': None,
@@ -25,3 +26,4 @@ def execute_command(command):
             'returncode': None,
             'error': str(e)
         })
+        return 1
