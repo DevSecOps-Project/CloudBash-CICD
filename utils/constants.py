@@ -12,5 +12,10 @@ class EMAIL:
     MAIN_RECEIVER = 'raismandavid@gmail.com'
     SENDER_EMAIL = 'devsecopsproj@gmail.com'
 
+class K8S:
+    DEPLOYMENT_FILE = '/cloudbash-deployment.yml'
+    SERVICE_FILE = '/cloudbash-service.yml'
+    IGRESS_FILE = '/cloudbash-indress.yml'
+
 class JENKINS:
     PORT = '8888'

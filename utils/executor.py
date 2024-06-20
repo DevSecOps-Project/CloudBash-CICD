@@ -1,24 +1,23 @@
 import subprocess
 
-
 def execute_command(command):
     try:
         cmd = ' '.join(command)
         print(f'Running command: {cmd}')
         result = subprocess.run(cmd, shell=True, check=True, text=True, capture_output=True)
         if result.returncode == 0:
+            print(f'Command succeeded with output: {result.stdout}')
             return result.stdout
-        raise ValueError(
-            f"command: {cmd} returned: {result.returncode} but expected 0"
-        )
+        else:
+            raise ValueError(f"Command '{cmd}' returned non-zero exit status {result.returncode}.")
     except subprocess.CalledProcessError as e:
         err = {
-            'stdout': e.output,
+            'stdout': e.stdout,
             'stderr': e.stderr,
             'returncode': e.returncode,
             'error': f"Command '{e.cmd}' returned non-zero exit status {e.returncode}."
         }
-        print(err)
+        print(f"Command failed: {err}")
         return err
     except Exception as e:
         err = {
@@ -27,5 +26,5 @@ def execute_command(command):
             'returncode': None,
             'error': str(e)
         }
-        print(err)
+        print(f"Unexpected error: {err}")
         return err

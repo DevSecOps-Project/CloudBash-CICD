@@ -5,7 +5,7 @@ import utils.executor
 
 
 def strip_version_val(version):
-    if isinstance(version) == isinstance('str'):
+    if isinstance(version, str):
         return version.strip(" v'\n'\"")
     return ''
 
