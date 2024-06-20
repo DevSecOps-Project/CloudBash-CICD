@@ -11,7 +11,7 @@ import utils.minikube_util
 if __name__ == "__main__":
     try:
         if len(sys.argv) != 2:
-            print('Usage: python build_docker_image.py <Dockerfile path>')
+            print('Usage: python local_deploy.py <Dockerfile path>')
             sys.exit(1)
         k8s_path = sys.argv[1]
         tagged_image = os.getenv('TAGGED_IMAGE')

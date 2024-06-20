@@ -8,7 +8,7 @@ import utils.executor
 if __name__ == '__main__':
     try:
         if len(sys.argv) != 2:
-            print('Usage: python build_docker_image.py <Dockerfile path>')
+            print('Usage: python build_image.py <Dockerfile path>')
             sys.exit(1)
         dockerfile_path = sys.argv[1]
         latest_ver = utils.aws_util.get_latest_image_version()
