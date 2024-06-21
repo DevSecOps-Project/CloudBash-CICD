@@ -7,10 +7,20 @@ def minikube_is_active():
     try:
         cmd = ['minikube', 'status']
         output = utils.executor.execute_command(cmd)
+        active = (
+            'minikube\n'
+            'type: Control Plane\n'
+            'host: Running\n'
+            'kubelet: Running\n'
+            'apiserver: Running\n'
+            'kubeconfig: Configured\n\n'
+        )
         if 'returncode' in output:
             if output['returncode'] == 7:
                 return False
-        return True
+        elif output == active:
+            return True
+        raise Exception
     except Exception as e:
         print(f'Error occurred while checking Minikubes status: {e}')
         sys.exit(1)

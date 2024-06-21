@@ -4,30 +4,21 @@ import utils.constants
 import utils.executor
 
 
-def apply_deployment(k8s_path):
+def k8s_apply(k8s_path, file):
     try:
-        file_path = ''.join([k8s_path, utils.constants.K8S.DEPLOYMENT_FILE])
+        file_path = ''.join([k8s_path, file])
         cmd = [
             'kubectl',
-            'apply -f', 
+            'apply -f',
             file_path
         ]
-        utils.executor.execute_command(cmd)
-        print('Deployment file applied')
+        output = utils.executor.execute_command(cmd)
+        if ('created' in output
+            or 'updated' in output
+            or 'unchanged' in output):
+            print('k8s file applied')
+        else:
+            raise Exception
     except Exception as e:
-        print(f'Error occurred while applying the deployment file: {e}')
-        sys.exit(1)
-
-def apply_service(k8s_path):
-    try:
-        file_path = ''.join([k8s_path, utils.constants.K8S.SERVICE_FILE])
-        cmd = [
-            'kubectl',
-            'apply -f', 
-            file_path
-        ]
-        utils.executor.execute_command(cmd)
-        print('Service file applied')
-    except Exception as e:
-        print(f'Error occurred while applying the service file: {e}')
+        print(f'Error occurred while applying the k8s file: {k8s_path}, {e}')
         sys.exit(1)

@@ -15,7 +15,7 @@ class EMAIL:
 class K8S:
     DEPLOYMENT_FILE = '/cloudbash-deployment.yml'
     SERVICE_FILE = '/cloudbash-service.yml'
-    IGRESS_FILE = '/cloudbash-indress.yml'
+    IGRESS_FILE = '/cloudbash-ingress.yml'
 
 class JENKINS:
     PORT = '8888'
