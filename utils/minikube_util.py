@@ -5,7 +5,7 @@ import utils.executor
 
 def minikube_is_active():
     try:
-        cmd = ['minikube', 'status']
+        cmd = ['/opt/homebrew/bin/minikube', 'status']
         output = utils.executor.execute_command(cmd)
         active = (
             'minikube\n'
@@ -31,7 +31,7 @@ def start_minikube():
             print('Minikube is active')
             return
         else:
-            cmd = ['minikube', 'start', '--driver=docker']
+            cmd = ['/opt/homebrew/bin/minikube', 'start', '--driver=docker']
             output = utils.executor.execute_command(cmd)
             print(output)
             print('Minikube has been activated')
@@ -42,7 +42,7 @@ def start_minikube():
 def stop_minikube():
     try:
         if minikube_is_active():
-            cmd = ['minikube', 'stop', '--all']
+            cmd = ['/opt/homebrew/bin/minikube', 'stop', '--all']
             output = utils.executor.execute_command(cmd)
             print(output)
             print('Minikube has been stopped')
@@ -56,7 +56,7 @@ def stop_minikube():
 
 def point_docker_daemon_to_minikube():
     try:
-        cmd = ['eval', '$(minikube -p minikube docker-env)']
+        cmd = ['eval', '$(/opt/homebrew/bin/minikube -p minikube docker-env)']
         utils.executor.execute_command(cmd)
         print('Docker daemon points to Minikube')
         return

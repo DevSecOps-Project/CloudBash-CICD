@@ -49,7 +49,7 @@ def push_docker_image_to_ecr(tagged_image):
 
 def pull_image(tagged_image):
     try:
-        output = utils.executor.execute_command(['docker', 'pull', tagged_image])
+        output = utils.executor.execute_command(['/usr/local/bin/docker', 'pull', tagged_image])
         if isinstance(output, dict) and 'error' in output:
             raise ValueError(output['error'])
         print(f'Docker image pulled successfully: {output}')

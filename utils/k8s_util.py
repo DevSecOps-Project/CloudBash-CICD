@@ -8,7 +8,7 @@ def k8s_apply(k8s_path, file):
     try:
         file_path = ''.join([k8s_path, file])
         cmd = [
-            'kubectl',
+            '/opt/homebrew/bin/kubectl',
             'apply -f',
             file_path
         ]
