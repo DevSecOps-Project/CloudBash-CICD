@@ -56,10 +56,12 @@ def stop_minikube():
 
 def point_docker_daemon_to_minikube():
     try:
-        cmd = ['eval', '$(/opt/homebrew/bin/minikube -p minikube docker-env)']
-        utils.executor.execute_command(cmd)
-        print('Docker daemon points to Minikube')
-        return
+        cmd = ['eval', '$(/opt/homebrew/bin/minikube docker-env)']
+        output = utils.executor.execute_command(cmd)
+        if output is '':
+            print('Docker daemon points to Minikube')
+            return
+        raise Exception
     except Exception as e:
         print(f'Error occurred while pointing Docker daemon to Minikube: {e}')
         sys.exit(1)
