@@ -17,11 +17,11 @@ def k8s_apply(k8s_path, file):
         if ('created' in output
             or 'updated' in output
             or 'unchanged' in output):
-            print('k8s file applied')
+            print(f'k8s file {file} applied')
         else:
             raise Exception
     except Exception as e:
-        print(f'Error occurred while applying the k8s file: {k8s_path}, {e}')
+        print(f'Error occurred while applying the k8s file: {file}, {e}')
         sys.exit(1)
 
 def age_to_seconds(age_str):
