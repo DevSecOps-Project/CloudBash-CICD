@@ -21,10 +21,12 @@ if __name__ == "__main__":
         print(f'TAGGED_IMAGE: {tagged_image}')
         # utils.minikube_util.start_minikube()
         # utils.minikube_util.point_docker_daemon_to_minikube()
+        # utils.docker_util.pull_image(tagged_image)
         utils.k8s_util.setup_creds_secret()
         utils.k8s_util.k8s_apply(k8s_path, utils.constants.K8S.DEPLOYMENT_FILE)
         utils.k8s_util.k8s_apply(k8s_path, utils.constants.K8S.SERVICE_FILE)
         utils.k8s_util.k8s_apply(k8s_path, utils.constants.K8S.IGRESS_FILE)
+        # ToDo: Verify Running
         # expose the service
         print("Deployment ready, please expose the service to use it locally")
     except Exception as e:

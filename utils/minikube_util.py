@@ -22,7 +22,7 @@ def start_minikube():
             print('Minikube is active')
             return
         else:
-            cmd = ['minikube', 'delete']
+            cmd = ['/opt/homebrew/bin/minikube', 'delete']
             output = utils.executor.execute_command(cmd)
             cmd = ['/opt/homebrew/bin/minikube', 'start', '--driver=docker']
             output = utils.executor.execute_command(cmd)

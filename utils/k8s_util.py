@@ -1,3 +1,4 @@
+import re
 import sys
 
 import utils.constants
@@ -26,7 +27,9 @@ def k8s_apply(k8s_path, file):
 def check_secrets(secret):
     try:
         cmd = ['./kubectl', 'get', 'secret', '--all-namespaces']
+        # cmd = ['kubectl', 'get', 'secret', '--all-namespaces']
         output = utils.executor.execute_command(cmd)
+        # re.search('default       creds-secret             kubernetes.io/dockerconfigjson   1      2d7h')
         if secret in output:
             return True
         return False
@@ -37,9 +40,9 @@ def check_secrets(secret):
 def setup_creds_secret():
     try:
         creds_secret = 'creds-secret'
-        if check_secrets(creds_secret):
-            print('creds_secret exist')
-            return
+        # if check_secrets(creds_secret):
+        #     print('creds_secret exist')
+        #     return
         aws_account_id = utils.constants.AWS.AWS_ACCOUNT_ID
         aws_region = utils.constants.AWS.AWS_REGION
         pass_stdin = f"{aws_account_id}.dkr.ecr.{aws_region}.amazonaws.com"
