@@ -89,8 +89,8 @@ def setup_creds_secret():
 
 def get_replicaset_info():
         try:
-            result = subprocess.run(['./kubectl', 'get', 'replicaset'], capture_output=True, text=True)
-            return result.stdout
+            result = utils.executor.execute_command(['kubectl', 'get', 'replicaset'])
+            return result
         except Exception as e:
             print(f"Error executing kubectl command: {e}")
             return ""
@@ -105,7 +105,7 @@ def verify_replicaset():
         output = get_replicaset_info()
         replicaset_info = parse_replicaset_info(output)
         for rs in replicaset_info:
-            name, desired, current, ready = rs
+            name, desired, current, ready, age = rs
             if 'cloudbash' in name and desired == current == ready:
                 print(f"Replicaset {name} is ready with {desired} replicas.")
                 return True
