@@ -89,7 +89,7 @@ def setup_creds_secret():
 
 def get_replicaset_info():
         try:
-            result = utils.executor.execute_command(['kubectl', 'get', 'replicaset'])
+            result = utils.executor.execute_command(['./kubectl', 'get', 'replicaset'])
             return result
         except Exception as e:
             print(f"Error executing kubectl command: {e}")
