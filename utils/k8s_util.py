@@ -51,7 +51,7 @@ def setup_creds_secret():
             'create secret', 'docker-registry',
             creds_secret, f'--docker-server={pass_stdin}',
             '--docker-username=AWS',
-            '--docker-password=$(aws ecr get-login-password)'
+            '--docker-password=$(/opt/homebrew/bin/aws ecr get-login-password)'
         ]
         utils.executor.execute_command(cmd)
         if check_secrets(creds_secret):
