@@ -24,7 +24,7 @@ def k8s_apply(k8s_path, file):
         print(f'Error occurred while applying the k8s file: {k8s_path}, {e}')
         sys.exit(1)
 
-def check_secrets(secret):
+def creds_secret_exist(secret):
     try:
         cmd = ['./kubectl', 'get', 'secret', '--all-namespaces']
         # cmd = ['kubectl', 'get', 'secret', '--all-namespaces']
@@ -37,12 +37,18 @@ def check_secrets(secret):
         print(f'Error occurred while geting secrets: {e}')
         sys.exit(1)
 
+def creds_secret_uptodate(creds_secret):
+    return False
+
 def setup_creds_secret():
     try:
         creds_secret = 'creds-secret'
-        # if check_secrets(creds_secret):
-        #     print('creds_secret exist')
-        #     return
+        if creds_secret_exist(creds_secret):
+            if creds_secret_uptodate(creds_secret):
+                print('creds_secret exist')
+                return
+        cmd = ['./kubectl', 'delete', creds_secret]
+        utils.executor.execute_command(cmd)
         aws_account_id = utils.constants.AWS.AWS_ACCOUNT_ID
         aws_region = utils.constants.AWS.AWS_REGION
         pass_stdin = f"{aws_account_id}.dkr.ecr.{aws_region}.amazonaws.com"
@@ -54,7 +60,7 @@ def setup_creds_secret():
             '--docker-password=$(/opt/homebrew/bin/aws ecr get-login-password)'
         ]
         utils.executor.execute_command(cmd)
-        if check_secrets(creds_secret):
+        if creds_secret_exist(creds_secret):
             print('creds_secret created successfully')
             return
         raise Exception
