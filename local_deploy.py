@@ -19,8 +19,8 @@ if __name__ == "__main__":
         if not tagged_image:
             raise ValueError('TAGGED_IMAGE environment variable not set')
         print(f'TAGGED_IMAGE: {tagged_image}')
-        utils.minikube_util.start_minikube()
-        utils.minikube_util.point_docker_daemon_to_minikube()
+        # utils.minikube_util.start_minikube()
+        # utils.minikube_util.point_docker_daemon_to_minikube()
         utils.k8s_util.setup_creds_secret()
         utils.k8s_util.k8s_apply(k8s_path, utils.constants.K8S.DEPLOYMENT_FILE)
         utils.k8s_util.k8s_apply(k8s_path, utils.constants.K8S.SERVICE_FILE)

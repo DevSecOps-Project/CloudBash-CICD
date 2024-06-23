@@ -8,7 +8,7 @@ def k8s_apply(k8s_path, file):
     try:
         file_path = ''.join([k8s_path, file])
         cmd = [
-            '/opt/homebrew/bin/kubectl',
+            './kubectl',
             'apply -f',
             file_path
         ]
@@ -25,7 +25,7 @@ def k8s_apply(k8s_path, file):
 
 def check_secrets(secret):
     try:
-        cmd = ['kubectl', 'get', 'secret', '--all-namespaces']
+        cmd = ['./kubectl', 'get', 'secret', '--all-namespaces']
         output = utils.executor.execute_command(cmd)
         if secret in output:
             return True
@@ -44,7 +44,7 @@ def setup_creds_secret():
         aws_region = utils.constants.AWS.AWS_REGION
         pass_stdin = f"{aws_account_id}.dkr.ecr.{aws_region}.amazonaws.com"
         cmd = [
-            '/opt/homebrew/bin/kubectl',
+            './kubectl',
             'create secret', 'docker-registry',
             creds_secret, f'--docker-server={pass_stdin}',
             '--docker-username=AWS',
