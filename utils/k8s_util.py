@@ -47,7 +47,7 @@ def setup_creds_secret():
             if creds_secret_uptodate(creds_secret):
                 print('creds_secret exist')
                 return
-        cmd = ['./kubectl', 'delete', creds_secret]
+        cmd = ['./kubectl', 'delete', 'secret', creds_secret]
         utils.executor.execute_command(cmd)
         aws_account_id = utils.constants.AWS.AWS_ACCOUNT_ID
         aws_region = utils.constants.AWS.AWS_REGION
