@@ -1,5 +1,7 @@
 import re
+import subprocess
 import sys
+import time
 
 import utils.constants
 import utils.executor
@@ -84,3 +86,46 @@ def setup_creds_secret():
     except Exception as e:
         print(f'Error occurred while setting up creds secret: {e}')
         sys.exit(1)
+
+def get_replicaset_info():
+        try:
+            result = subprocess.run(['./kubectl', 'get', 'replicaset'], capture_output=True, text=True)
+            return result.stdout
+        except Exception as e:
+            print(f"Error executing kubectl command: {e}")
+            return ""
+    
+def parse_replicaset_info(output):
+    regex = re.compile(r'(\S+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)')
+    matches = regex.findall(output)
+    return matches
+
+def verify_replicaset():
+    while True:
+        output = get_replicaset_info()
+        replicaset_info = parse_replicaset_info(output)
+        for rs in replicaset_info:
+            name, desired, current, ready = rs
+            if 'cloudbash' in name and desired == current == ready:
+                print(f"Replicaset {name} is ready with {desired} replicas.")
+                return True
+        desired_replicas = next(
+            (
+                int(desired) for name,
+                desired,
+                current,
+                ready,
+                age in replicaset_info if 'cloudbash' in name
+            ),
+            None
+        )
+        if desired_replicas is not None:
+            total_wait_time = 10 * desired_replicas
+            time.sleep(10)
+            total_wait_time -= 10
+            if total_wait_time <= 0:
+                break
+        else:
+            break
+    print("Failed to verify the replicaset.")
+    return False

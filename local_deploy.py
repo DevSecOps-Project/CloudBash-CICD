@@ -26,7 +26,7 @@ if __name__ == "__main__":
         utils.k8s_util.k8s_apply(k8s_path, utils.constants.K8S.DEPLOYMENT_FILE)
         utils.k8s_util.k8s_apply(k8s_path, utils.constants.K8S.SERVICE_FILE)
         utils.k8s_util.k8s_apply(k8s_path, utils.constants.K8S.IGRESS_FILE)
-        # ToDo: Verify Running
+        utils.k8s_util.verify_replicaset()
         # expose the service
         print("Deployment ready, please expose the service to use it locally")
     except Exception as e:
