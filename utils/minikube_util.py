@@ -9,7 +9,7 @@ def minikube_is_active():
         output = utils.executor.execute_command(cmd)
         if 'returncode' in output:
             return False
-        elif output == "Running":
+        if output == "Running":
             return True
         raise Exception
     except Exception as e:
@@ -21,15 +21,14 @@ def start_minikube():
         if minikube_is_active():
             print('Minikube is active')
             return
-        else:
-            cmd = ['/opt/homebrew/bin/minikube', 'delete']
-            output = utils.executor.execute_command(cmd)
-            cmd = ['/opt/homebrew/bin/minikube', 'start', '--driver=docker']
-            output = utils.executor.execute_command(cmd)
-            if minikube_is_active():
-                print('Minikube has been activated')
-                return
-            raise Exception
+        cmd = ['/opt/homebrew/bin/minikube', 'delete']
+        utils.executor.execute_command(cmd)
+        cmd = ['/opt/homebrew/bin/minikube', 'start', '--driver=docker']
+        utils.executor.execute_command(cmd)
+        if minikube_is_active():
+            print('Minikube has been activated')
+            return
+        raise Exception
     except Exception as e:
         print(f'Error occurred while starting Minikube: {e}')
         sys.exit(1)
@@ -42,9 +41,8 @@ def stop_minikube():
             print(output)
             print('Minikube has been stopped')
             return
-        else:
-            print('Minikube is off')
-            return
+        print('Minikube is off')
+        return
     except Exception as e:
         print(f'Error occurred while stopping Minikube: {e}')
         sys.exit(1)

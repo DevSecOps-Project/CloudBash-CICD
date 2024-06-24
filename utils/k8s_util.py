@@ -1,5 +1,4 @@
 import re
-import subprocess
 import sys
 import time
 
@@ -88,13 +87,13 @@ def setup_creds_secret():
         sys.exit(1)
 
 def get_replicaset_info():
-        try:
-            result = utils.executor.execute_command(['./kubectl', 'get', 'replicaset'])
-            return result
-        except Exception as e:
-            print(f"Error executing kubectl command: {e}")
-            return ""
-    
+    try:
+        result = utils.executor.execute_command(['./kubectl', 'get', 'replicaset'])
+        return result
+    except Exception as e:
+        print(f"Error executing kubectl command: {e}")
+        return ""
+
 def parse_replicaset_info(output):
     regex = re.compile(r'(\S+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)')
     matches = regex.findall(output)

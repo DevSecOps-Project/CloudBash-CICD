@@ -8,8 +8,7 @@ def execute_command(command):
         if result.returncode == 0:
             print(f'Command succeeded with output: {result.stdout}')
             return result.stdout
-        else:
-            raise ValueError(f"Command '{cmd}' returned non-zero exit status {result.returncode}.")
+        raise ValueError(f"Command '{cmd}' returned non-zero exit status {result.returncode}.")
     except subprocess.CalledProcessError as e:
         err = {
             'stdout': e.stdout,

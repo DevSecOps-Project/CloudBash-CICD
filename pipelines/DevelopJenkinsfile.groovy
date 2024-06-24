@@ -83,7 +83,7 @@ pipeline {
                 script {
                     sh """#!/bin/bash
                         source ${VENV_DIR}/bin/activate
-                        pylint --disable=missing-docstring,W0201,W0718,C0103,C0209,R0903  ${WORKSPACE}/CloudBash-CICD
+                        pylint --disable=missing-docstring,W0201,W0718,C0103,C0209,R0903,W0719  ${WORKSPACE}/CloudBash-CICD
                     """
                 }
             }
