@@ -1,2 +1,3 @@
 # gitignore file
 __*__
+terraform/.terraform*
